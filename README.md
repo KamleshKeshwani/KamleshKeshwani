@@ -1,6 +1,13 @@
+import java.util.Stack;
+
 public class Hello {
 
     public static double evaluateExpression(String str) {
+        // Validate input
+        if (str.isEmpty() || !isValidExpression(str)) {
+            throw new IllegalArgumentException("Invalid Expression: Cannot start with ')' or '*' or '/'");
+        }
+
         // Stack for numbers and operators
         Stack<Double> val = new Stack<>();
         Stack<Character> op = new Stack<>();
@@ -38,7 +45,9 @@ public class Hello {
                 while (!op.isEmpty() && op.peek() != '(') {
                     val.push(applyOperation(op.pop(), val.pop(), val.pop()));
                 }
-                op.pop(); // Remove the '('
+                if (op.isEmpty() || op.pop() != '(') {
+                    throw new IllegalArgumentException("Invalid Expression: Mismatched parentheses");
+                }
             }
             // If it's an operator
             else if (isOperator(ch)) {
@@ -55,6 +64,12 @@ public class Hello {
         }
 
         return val.pop();
+    }
+
+    // Function to validate the input expression
+    private static boolean isValidExpression(String str) {
+        char firstChar = str.charAt(0);
+        return !(firstChar == ')' || firstChar == '*' || firstChar == '/');
     }
 
     private static boolean isOperator(char ch) {
