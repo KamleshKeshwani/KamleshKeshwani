@@ -94,3 +94,25 @@ public class Hello {
         return 0;
     }
 }
+
+
+
+public static String preprocessExpression(String str) {
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < str.length(); i++) {
+        char current = str.charAt(i);
+        result.append(current);
+
+        // Check if ')' is followed by a digit or '('
+        if (current == ')' && i + 1 < str.length() &&
+            (Character.isDigit(str.charAt(i + 1)) || str.charAt(i + 1) == '(')) {
+            result.append('*'); // Add multiplication
+        }
+
+        // Check if a digit is followed by '('
+        if (Character.isDigit(current) && i + 1 < str.length() && str.charAt(i + 1) == '(') {
+            result.append('*'); // Add multiplication
+        }
+    }
+    return result.toString();
+}
