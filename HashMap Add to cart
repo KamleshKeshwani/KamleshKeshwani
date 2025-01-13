@@ -1,0 +1,97 @@
+import java.util.*;
+
+public class ShoppingCart {
+
+    // HashMap to store items in the cart
+    private HashMap<String, String> cart = new HashMap<>();
+    private Stack<Map.Entry<String, String>> deletedItems = new Stack<>();
+
+    public static void main(String[] args) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.menu();
+    }
+
+    // Method to display the menu
+    public void menu() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nShopping Cart Menu:");
+            System.out.println("1. Add Item");
+            System.out.println("2. Delete Item");
+            System.out.println("3. Show Cart");
+            System.out.println("4. Recover Last Deleted Item");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            switch (choice) {
+                case 1:
+                    addItem(scanner);
+                    break;
+                case 2:
+                    deleteItem(scanner);
+                    break;
+                case 3:
+                    showCart();
+                    break;
+                case 4:
+                    recoverDeletedItem();
+                    break;
+                case 5:
+                    System.out.println("Exiting... Thank you!");
+                    return;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+
+    // Method to add an item to the cart
+    private void addItem(Scanner scanner) {
+        System.out.print("Enter Item Code (Key): ");
+        String key = scanner.nextLine();
+        System.out.print("Enter Item Name (Value): ");
+        String value = scanner.nextLine();
+        if (cart.containsKey(key)) {
+            System.out.println("Item with this code already exists!");
+        } else {
+            cart.put(key, value);
+            System.out.println("Item added to the cart.");
+        }
+    }
+
+    // Method to delete an item from the cart
+    private void deleteItem(Scanner scanner) {
+        System.out.print("Enter Item Code to delete: ");
+        String key = scanner.nextLine();
+        if (cart.containsKey(key)) {
+            deletedItems.push(Map.entry(key, cart.get(key)));
+            cart.remove(key);
+            System.out.println("Item deleted from the cart.");
+        } else {
+            System.out.println("Item not found in the cart!");
+        }
+    }
+
+    // Method to show items in the cart
+    private void showCart() {
+        if (cart.isEmpty()) {
+            System.out.println("Cart is empty!");
+        } else {
+            System.out.println("Items in the cart:");
+            cart.forEach((key, value) -> System.out.println("Code: " + key + ", Name: " + value));
+        }
+    }
+
+    // Method to recover the last deleted item
+    private void recoverDeletedItem() {
+        if (!deletedItems.isEmpty()) {
+            Map.Entry<String, String> lastDeleted = deletedItems.pop();
+            cart.put(lastDeleted.getKey(), lastDeleted.getValue());
+            System.out.println("Recovered Item - Code: " + lastDeleted.getKey() + ", Name: " + lastDeleted.getValue());
+        } else {
+            System.out.println("No items to recover!");
+        }
+    }
+}
